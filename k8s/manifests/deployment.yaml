@@ -5,7 +5,7 @@ metadata:
   labels:
     app: python-api
 spec:
-  replicas: 1  # Number of pods
+  replicas: 1  # Number of pods which is needed
   selector:
     matchLabels:
       app: python-api
