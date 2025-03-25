@@ -10,7 +10,7 @@ python-app/__pycache__/
 
 # Ignore Docker build artifacts
 python-app/.dockerignore
-python-app/Dockerfile
+
 
 # Ignore shell scripts (if they are not needed in Git)
 
