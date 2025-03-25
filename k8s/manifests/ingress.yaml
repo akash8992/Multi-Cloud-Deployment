@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.yourdomain.com  # Replace with your domain or leave empty for wildcard
+    - host: api.mytask.com  # Replace with your domain or leave empty for wildcard
       http:
         paths:
           - path: /
