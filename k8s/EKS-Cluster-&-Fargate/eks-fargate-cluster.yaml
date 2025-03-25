@@ -1,0 +1,26 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-fargate-cluster
+  region: ap-south-1
+
+fargateProfiles:
+  - name: fargate-profile
+    selectors:
+      - namespace: default
+      - namespace: kube-system
+    subnets:
+      - subnet-xxxxxxxx # Replace with your private subnet ID
+      - subnet-yyyyyyyy # Replace with another private subnet ID
+
+managedNodeGroups:
+  - name: worker-nodes
+    instanceTypes: ["t3.large"]
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    privateNetworking: true
+    subnets:
+      - subnet-xxxxxxxx # Replace with your private subnet ID
+      - subnet-yyyyyyyy # Replace with another private subnet ID
