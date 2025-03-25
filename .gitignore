@@ -1,0 +1,23 @@
+# Ignore Terraform-related files
+aws-terraform/.terraform/
+**/terraform.tfstate*
+**/.terraform.lock.hcl
+*.tfvars
+
+# Ignore Python virtual environment and cache
+python-app/venv/
+python-app/__pycache__/
+
+# Ignore Docker build artifacts
+python-app/.dockerignore
+python-app/Dockerfile
+
+# Ignore shell scripts (if they are not needed in Git)
+script.sh
+
+# Ignore log and temp files
+*.log
+*.tmp
+
+# Ignore MacOS system files
+.DS_Store
