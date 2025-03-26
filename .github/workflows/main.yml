@@ -19,4 +19,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # Install Python dependencies    
+      - name: Install dependencies
+        working-directory: Multi-Cloud-Deployment/python-api-app
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
