@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.mytask.com  # Replace with your domain or leave empty for wildcard
+    - host: api-mytask.com  # Replace with your domain or leave empty for wildcard
       http:
         paths:
           - path: /
@@ -17,3 +17,6 @@ spec:
                 name: python-api-service
                 port:
                   number: 80
+13.127.170.173
+15.207.66.85
+13.126.237.30
