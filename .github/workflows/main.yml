@@ -20,12 +20,20 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       # Install Python dependencies    
-      - name: Debug: Verify Directory
+      - name: Debug - Verify Directory
         run: |
-          echo "Current Directory: $(pwd)"
-          ls -la
-          echo "Checking /home/ubuntu/Multi-Cloud-Deployment/"
-          ls -la /home/ubuntu/Multi-Cloud-Deployment/ || echo "Directory not found"
-          echo "Checking /home/ubuntu/Multi-Cloud-Deployment/python-api-app/"
-          ls -la /home/ubuntu/Multi-Cloud-Deployment/python-api-app || echo "Directory not found"
+          echo "### Checking Current Directory ###"
+          pwd
+          echo "### Listing Files in Current Directory ###"
+          ls -lah
+          
+          echo "### Checking Home Directory (/home/ubuntu) ###"
+          ls -lah /home/ubuntu || echo "Directory not found"
+
+          echo "### Checking Multi-Cloud-Deployment Repository Directory ###"
+          ls -lah /home/ubuntu/Multi-Cloud-Deployment || echo "Directory not found"
+
+          echo "### Checking python-api-app Directory ###"
+          ls -lah /home/ubuntu/Multi-Cloud-Deployment/python-api-app || echo "Directory not found"
+
 
