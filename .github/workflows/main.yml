@@ -43,6 +43,7 @@ jobs:
         run: |
           cd python-api-app
           trivy fs . > trivyfd.txt
+
       # Set up Docker Buildx (optional but recommended)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -64,9 +65,10 @@ jobs:
       # Trivy image scanning
       - name: Image scan
         run: trivy image akash8992/python-api-app:v1 > trivyimage.txt
-  
+
   # Deploy Start
   deploy:
+    needs: build-analyze-scan
     runs-on: [self-hosted]
     steps:
       - name: Docker pull image
