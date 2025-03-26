@@ -66,6 +66,7 @@ jobs:
 
   # Deploy Start
   deploy:
+    needs: build  # This makes sure 'deploy' runs only after 'build' completes
     runs-on: [self-hosted]
     steps:
       - name: Docker pull image
