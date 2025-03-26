@@ -27,19 +27,23 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-      # # Install Trivy
-      # - name: Install Trivy
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y wget
-      #     wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
-      #     tar zxvf trivy_Linux-64bit.tar.gz
-      #     sudo mv trivy /usr/local/bin/
-      #     trivy --version  # Verify installation
+
+          
+      # Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
+          tar zxvf trivy_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/trivy
+          echo "Trivy installed successfully"
+          trivy --version  # Verify installation
+          
 
       # Trivy file scan
       - name: Trivy file scan
         run: |
           cd python-api-app
-          trivy fs . > trivyfd.txt
+          /usr/local/bin/trivy fs . > trivyfd.txt  # Use full path to avoid PATH issues
 
