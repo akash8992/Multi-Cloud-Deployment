@@ -2,7 +2,11 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
+<<<<<<< HEAD
   name: my-task-cluster  # Updated cluster name
+=======
+  name: eks-fargate-cluster
+>>>>>>> f430aea (changes)
   region: ap-south-1
 
 fargateProfiles:
@@ -11,16 +15,30 @@ fargateProfiles:
       - namespace: default
       - namespace: kube-system
     subnets:
+<<<<<<< HEAD
       - subnet-0526ffdcfa018ddb9  # Private subnet
       - subnet-04d195f65c4309f27  # Private subnet
 
 managedNodeGroups:
   - name: worker-nodes
     instanceTypes: ["t3.large"]  # Updated instance type
+=======
+      - subnet-xxxxxxxx # Replace with your private subnet ID
+      - subnet-yyyyyyyy # Replace with another private subnet ID
+
+managedNodeGroups:
+  - name: worker-nodes
+    instanceTypes: ["t3.large"]
+>>>>>>> f430aea (changes)
     desiredCapacity: 2
     minSize: 1
     maxSize: 3
     privateNetworking: true
     subnets:
+<<<<<<< HEAD
       - subnet-01709bf82e8a6b831  # Private subnet
       - subnet-0a5d722b8fa665565  # Private subnet
+=======
+      - subnet-xxxxxxxx # Replace with your private subnet ID
+      - subnet-yyyyyyyy # Replace with another private subnet ID
+>>>>>>> f430aea (changes)

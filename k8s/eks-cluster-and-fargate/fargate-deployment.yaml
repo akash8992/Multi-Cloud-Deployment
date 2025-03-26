@@ -2,7 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-api
+<<<<<<< HEAD
   namespace: default  # Ensure it's deployed in the correct namespace
+=======
+>>>>>>> f430aea (changes)
 spec:
   replicas: 2
   selector:
@@ -19,4 +22,8 @@ spec:
         ports:
         - containerPort: 80
       nodeSelector:
+<<<<<<< HEAD
         eks.amazonaws.com/compute-type: fargate
+=======
+        eks.amazonaws.com/compute-type: fargate
+>>>>>>> f430aea (changes)
