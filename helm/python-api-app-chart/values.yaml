@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image: 
+  repository: akash8992/python-api-app
+  pullPolicy: IfNotPresent
+
+  Tag: v1
+
+ingress:
+  enabled: false 
+  ingressClassName: "" 
+  annotations: {} 
+
+  
