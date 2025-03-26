@@ -75,6 +75,13 @@ jobs:
       - name: Image scan
         run: trivy image akash8992/python-api-app:v1 > trivyimagedeploy.txt
 
+
+       # Deploy to container
+      - name: Stop and remove existing container if it exists
+        run: |
+           docker ps -q -f name=python-api-app | grep -q . && docker stop python-api-app && docker rm python-api-app || echo "No container to stop/remove"
+        
+        # Deploy to container
       - name: Deploy to container
         run: docker run -d --name python-api-app -p 80:80 akash8992/python-api-app:v1
 
