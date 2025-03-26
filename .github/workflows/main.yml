@@ -83,7 +83,7 @@ jobs:
         
         # Deploy to container
       - name: Deploy to container
-        run: docker run -d --name python-api-app -p 80:80 akash8992/python-api-app:v1
+        run: docker run -d --name python-api-app -p 8080:80 akash8992/python-api-app:v1
 
       ##### kubeconfig
       - name: Update kubeconfig
