@@ -59,6 +59,7 @@ jobs:
       # Build and push the Docker image  
       - name: Build and push Docker image
         run: |
+          cd python-api-app
           docker build -t akash8992/python-api-app:v1 .
           docker push akash8992/python-api-app:v1
 
