@@ -33,17 +33,16 @@ jobs:
       - name: Install Trivy
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y wget
-          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
-          tar zxvf trivy_Linux-64bit.tar.gz
-          sudo mv trivy /usr/local/bin/trivy
-          echo "Trivy installed successfully"
+          sudo apt-get install -y wget curl gnupg lsb-release
+          curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update -y
+          sudo apt-get install -y trivy
           trivy --version  # Verify installation
-          
 
       # Trivy file scan
       - name: Trivy file scan
         run: |
           cd python-api-app
-          /usr/local/bin/trivy fs . > trivyfd.txt  # Use full path to avoid PATH issues
+          trivy fs . > trivyfd.txt
 
