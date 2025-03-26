@@ -1,80 +1,22 @@
-name: Build, Analyze, Scan & Deploy with Helm
+name: Build
 
 on:
   push:
     branches:
       - main
 
+
 jobs:
-  build-analyze-scan:
-    name: Build & Analyze
-    runs-on: [self-hosted]
-    
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Ensures full commit history for analysis
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'  # Use the Python version your project requires
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Build and analyze with SonarQube
-        uses: sonarsource/sonarqube-scan-action@master
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Trivy file scan
-        run: trivy fs . > trivy-file-scan.txt
-
-      - name: Build and push Docker image
-        env:
-          DOCKER_CLI_ACI: 1
-        run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker build -t akash8992/python-api-app:latest .
-          docker push akash8992/python-api-app:latest
-
-      - name: Image security scan
-        run: trivy image akash8992/python-api-app:latest > trivy-image-scan.txt
-
-  deploy:
-    needs: build-analyze-scan
-    runs-on: [self-hosted]
-
-    steps:
-      - name: Pull latest Docker image
-        run: docker pull akash8992/python-api-app:latest
-
-      - name: Run Trivy image scan before deployment
-        run: trivy image akash8992/python-api-app:latest > trivy-image-deploy.txt
-
-      ##### Configure kubeconfig
-      - name: Update kubeconfig for EKS
-        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
-
-      ##### Deploy using Helm
-      - name: Deploy Python API using Helm
-        run: |
-          helm upgrade --install python-api-app ./helm/python-api-app-chart \
-            --set image.repository=akash8992/python-api-app \
-            --set image.tag=latest
-
-      #### Send Slack Notification
-      - name: Send a Slack Notification
-        if: always()
-        uses: act10ns/slack@v1
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#devops-task'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
