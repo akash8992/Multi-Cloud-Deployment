@@ -21,9 +21,9 @@ jobs:
 
       # Install Python dependencies    
       - name: Install dependencies
-        working-directory: Multi-Cloud-Deployment/python-api-app
         run: |
-          python -m venv venv
+          cd /home/ubuntu/Multi-Cloud-Deployment/python-api-app
+          python3 -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
