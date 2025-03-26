@@ -27,4 +27,19 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
+      # Trivy file scan
+      - name: Trivy file scan
+        run: |
+          cd python-api-app
+          trivy fs . > trivyfd.txt
+
+      # Build the Docker image and push it to Docker Hub  
+      - name: Build and push Docker image
+        env:
+          DOCKER_CLI_ACI: 1
+        run: |
+          cd python-api-app
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker build -t akash8992/python-api-app:latest .
+          docker push akash8992/python-api-app:latest
 
