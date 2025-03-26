@@ -90,8 +90,9 @@ jobs:
         run: aws eks --region ap-south-1 update-kubeconfig --name my-task-cluster
 
       ##### deploy to k8s
-      - name: Deploy to EKS
-        run: kubectl apply -f deployment-service.yml
+      - name: Deploy Helm Chart
+        run: helm upgrade --install python-api-app helm/python-api-app-chart
+        
 
       ##### slack notification
       - name: Send a Slack Notification
