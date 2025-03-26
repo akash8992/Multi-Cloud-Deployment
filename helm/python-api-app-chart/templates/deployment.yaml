@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-api-deployment
+  labels:
+    app: python-api
+spec:
+  replicas: 1  # Number of pods which is needed
+  selector:
+    matchLabels:
+      app: python-api
+  template:
+    metadata:
+      labels:
+        app: python-api
+    spec:
+      containers:
+        - name: python-api
+          image: akash8992/python-api-app:{{ .value.image.tag }}  # Your Docker Hub image
+          ports:
+            - containerPort: 80  # Match with your app’s listening port
+          env:
+            - name: ENV
+              value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-api-service
+spec:
+  selector:
+    app: python-api
+  ports:
+    - protocol: TCP
+      port: 80  # External port
+      targetPort: 80  # Internal container port
+  type: LoadBalancer  # Exposes service via an AWS ELB (use ClusterIP for internal access)
