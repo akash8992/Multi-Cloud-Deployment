@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: python-api-container
-          image: akash8992/python-api-app:{{ .value.image.tag }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # Your Docker Hub image
+          image: akash8992/python-api-app:{{ .Values.image.tag }}  # Your Docker Hub image
           ports:
             - containerPort: 80  # Match with your app’s listening port
           env:
