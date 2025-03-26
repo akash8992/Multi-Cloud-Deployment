@@ -20,20 +20,11 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       # Install Python dependencies    
-      - name: Debug - Verify Directory
+      - name: Install dependencies
         run: |
-          echo "### Checking Current Directory ###"
-          pwd
-          echo "### Listing Files in Current Directory ###"
-          ls -lah
-          
-          echo "### Checking Home Directory (/home/ubuntu) ###"
-          ls -lah /home/ubuntu || echo "Directory not found"
-
-          echo "### Checking Multi-Cloud-Deployment Repository Directory ###"
-          ls -lah /home/ubuntu/Multi-Cloud-Deployment || echo "Directory not found"
-
-          echo "### Checking python-api-app Directory ###"
-          ls -lah /home/ubuntu/Multi-Cloud-Deployment/python-api-app || echo "Directory not found"
-
+          cd python-api-app  # Move into the correct directory
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
