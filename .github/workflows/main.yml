@@ -64,6 +64,17 @@ jobs:
       - name: Image scan
         run: trivy image akash8992/python-api-app:v1 > trivyimage.txt
 
+              ##### slack notification
+      - name: Send a Slack Notification
+        if: always()
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#devops-task'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   # Deploy Start
   deploy:
     needs: build  # This makes sure 'deploy' runs only after 'build' completes
