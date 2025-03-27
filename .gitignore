@@ -3,7 +3,15 @@ aws-terraform/.terraform/
 **/terraform.tfstate*
 **/.terraform.lock.hcl
 *.tfvars
+# Ignore Terraform local files
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.zip
+*.tar.gz
 
+# Ignore large Terraform provider binaries
+terraform-provider-*
 # Ignore Python virtual environment and cache
 python-app/venv/
 python-app/__pycache__/
