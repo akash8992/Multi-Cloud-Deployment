@@ -3,7 +3,7 @@ replicaCount: 1
 image: 
   repository: akash8992/python-api-app
   pullPolicy: IfNotPresent
-  Tag: v1
+  tag: v1
 
 
 ingress:
