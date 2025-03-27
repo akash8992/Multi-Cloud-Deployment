@@ -1,0 +1,104 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Install Python dependencies    
+      - name: Install dependencies
+        run: |
+          cd python-api-app  # Move into the correct directory
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+          
+      # Install Trivy
+      - name: Install Trivy
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget curl gnupg lsb-release
+          curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update -y
+          sudo apt-get install -y trivy
+          trivy --version  # Verify installation
+
+      # Trivy file scan
+      - name: Trivy file scan
+        run: |
+          cd python-api-app
+          trivy fs . > trivyfd.txt
+      # Set up Docker Buildx (optional but recommended)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build and push the Docker image  
+      - name: Build and push Docker image
+        run: |
+          cd python-api-app
+          docker build -t akash8992/python-api-app:v1 .
+          docker push akash8992/python-api-app:v1
+      # Trivy image scanning
+      - name: Image scan
+        run: trivy image akash8992/python-api-app:v1 > trivyimage.txt
+
+  
+  
+  # Deploy Start
+  deploy:
+   runs-on: [self-hosted]
+   steps:
+    - name: Docker pull image
+      run: docker pull akash8992/python-api-app:v1
+
+    - name: Image scan
+      run: trivy image akash8992/python-api-app:v1 > trivyimagedeploy.txt
+
+    - name: Deploy to container
+      run: docker run -d --name python-api-app -p 80:80 akash8992/python-api-app:v1
+
+     ##### kubeconfig
+    - name: Update kubeconfig
+      run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+ 
+   ##### deploy to k8s
+    - name: Deploy to EKS
+      run: kubectl apply -f deployment-service.yml
+
+   ##### slack notification
+    - name: Send a Slack Notification
+      if: always()
+      uses: act10ns/slack@v1
+       with:
+       status: ${{ job.status }}
+       steps: ${{ toJson(steps) }}
+       channel: '#devops-task'
+      
+      env:
+       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
